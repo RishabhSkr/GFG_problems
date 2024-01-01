@@ -5,32 +5,26 @@ using namespace std;
 // } Driver Code Ends
 class Solution {
   public:
+  
     bool canPair(vector<int> nums, int k) {
-        // Code here.
-        int n=nums.size();
-
+        int n =nums.size();
         if(n%2!=0)return 0;
-        
-        unordered_map<int,int>mp;
-        
+        unordered_set<int>st;
         for(auto x : nums){
-            if(k == 0) return false; // handle the case when k is zero
-            x = (x % k + k) % k; // handle the case when x is negative
-            mp[x]++;
-        }
-        
-        for(auto x : mp){
-            if(x.first == 0 || x.first == k - x.first){ // handle the case when x is equal to k-x
-                if(x.second % 2 != 0) return false; // check if the number of elements is even
+            int r1 = x%k;
+            int r2 = k-r1;
+            if(st.find(r2)!=st.end()){
+                st.erase(r2);
+            }else if(r1==0 && st.find(0)!=st.end()){
+                st.erase(0);
             }
             else{
-                if(mp[x.first] != mp[k - x.first]) return false; // check if the number of elements is equal
+                st.insert(r1);
             }
         }
+        return st.size()==0;
         
-        return true;
     }
-
 };
 
 //{ Driver Code Starts.
