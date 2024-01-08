@@ -40,40 +40,87 @@ struct Node
 };
 
 */
+    // struct Node * NlognApproach(Node *node1,Node *node2)
+    // {
+    //     // your code goes here
+    //     Node * ptr = node1 ,*ptr2 = node2;
+    //     vector<int>list;
+    //     while(ptr){
+    //         list.push_back(ptr->data);
+    //         ptr=ptr->next;
+    //     }
+    //     while(ptr2){
+    //         list.push_back(ptr2->data);
+    //         ptr2=ptr2->next;
+    //     }
+    //   sort(list.begin(), list.end(), [](const int &a, const int &b) {
+    //     return a > b;
+    // });
+    //     Node * head = NULL,*tail=NULL;
+    //     for(int i=0;i<list.size();++i){
+    //         Node * temp = newNode(list[i]);
+    //         if(head == NULL){
+    //             head=temp;
+    //             tail=head;
+    //         }
+    //         else{
+    //             tail->next = temp;
+    //             tail=tail->next;
+    //         }
+    //     }
+    //     return head;
+        
+    // }  
+    Node * reverseLL(Node * head){
+        if(head==NULL)return 0;
+        Node * prev = NULL,*curr = head, *nxt = head->next;
+        while(curr!=NULL){
+            curr->next = prev;
+            prev = curr;
+            curr = nxt;
+            if(nxt!=NULL)nxt = nxt->next;
+        }
+        return prev;
+    }
 class Solution
 {
     public:
-    
     struct Node * mergeResult(Node *node1,Node *node2)
     {
-        // your code goes here
-        Node * ptr = node1 ,*ptr2 = node2;
-        vector<int>list;
-        while(ptr){
-            list.push_back(ptr->data);
-            ptr=ptr->next;
-        }
+        if (node1 == NULL) return reverseLL(node2);
+        if (node2 == NULL) return reverseLL(node1);
+
+        Node *head,*tail;
         
-        while(ptr2){
-            list.push_back(ptr2->data);
-            ptr2=ptr2->next;
+        if(node1->data<node2->data){
+            head=node1;
+            tail = head;
+            node1= node1->next;
         }
-       sort(list.begin(), list.end(), [](const int &a, const int &b) {
-        return a > b;
-    });
-        Node * head = NULL,*tail=NULL;
-        for(int i=0;i<list.size();++i){
-            Node * temp = newNode(list[i]);
-            if(head == NULL){
-                head=temp;
-                tail=head;
-            }
-            else{
+        else{
+            head = node2;
+            tail = head;
+            node2= node2->next;
+        }
+        while(node1!=NULL && node2!=NULL){
+             if(node1->data<node2->data){
+                Node*temp = node1;
                 tail->next = temp;
-                tail=tail->next;
-            }
+                tail=temp;
+                node1=node1->next;
+                
+             }else{
+                 Node*temp = node2;
+                tail->next = temp;
+                tail=temp;
+                node2=node2->next;
+             }
+             
         }
-        return head;
+        if(node1==NULL)tail->next=node2;
+        else tail->next=node1;
+        
+        return reverseLL(head);
         
         
     }  
