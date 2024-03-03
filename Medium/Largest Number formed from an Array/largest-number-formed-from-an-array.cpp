@@ -11,15 +11,15 @@ public:
 	// The main function that returns the arrangement with the largest value as
 	// string.
 	// The function accepts a vector of strings
-	bool static comparator(string a,string b){
+	static bool compare(string &a,string &b){
 	    return a+b>b+a;
 	}
-	string printLargest(vector<string> &arr) {
+	string printLargest(int n, vector<string> &arr) {
 	    // code here
-	    sort(arr.begin(),arr.end(),comparator);
-	    string ans ="";
-	    for(auto x : arr){
-	        ans+=x;
+	    sort(arr.begin(),arr.end(),compare);
+	    string ans="";
+	    for(int i = 0;i<arr.size();++i){
+	        ans+=arr[i];
 	    }
 	    return ans;
 	}
@@ -38,7 +38,7 @@ int main() {
             cin >> arr[i];
         }
         Solution ob;
-        auto ans = ob.printLargest(arr);
+        auto ans = ob.printLargest(n, arr);
         cout << ans << "\n";
     }
     return 0;
