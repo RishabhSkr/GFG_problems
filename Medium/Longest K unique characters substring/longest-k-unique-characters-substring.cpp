@@ -11,22 +11,24 @@ class Solution{
   public:
     int longestKSubstr(string s, int k) {
     // your code here
-    unordered_map<char,int>mp;
-     int i =0,j =0,maxi =-1;
-        while(j<s.size()){
-             mp[s[j]]++;
-             
-             while(i<j && mp.size()>k){
-                 mp[s[i]]--;
-                 if(mp[s[i]]==0) mp.erase(s[i]);
-                 i++;
-             }
-             
-             if(mp.size()==k)maxi = max(maxi,j-i+1);
-             
-             j++;
-         } 
-        return (maxi==-1)? -1:maxi;
+        int n = s.size();
+        vector<int>mp(26,0);
+        int cnt =0;
+        int i =0;
+        int maxLen = -1;
+        for(int j = 0;j<n;++j){
+            if(mp[s[j]-'a']==0)cnt++;
+            mp[s[j]-'a']++;
+            if(cnt>k){
+                mp[s[i]-'a']--;
+                if(mp[s[i]-'a']==0)cnt--;
+                // if(mp[s[i]]==0)mp.erase(mp[s[i]]);
+                i++;
+            }
+            // cout<<i<<j<<" "<<j-i+1<<endl;
+            if(cnt==k)maxLen = max(maxLen,j-i+1);
+        }
+        return maxLen;
     }
 };
 
