@@ -19,22 +19,48 @@ class Solution
 {
     public:
     //Function to merge k sorted arrays.
-    vector<int> mergeKArrays(vector<vector<int>> arr, int k)
+        vector<int> partition(vector<vector<int>>& arrays, int start, int end) {
+        if (start == end) 
+            return arrays[start];
+            int mid = start + (end - start) / 2;
+            vector<int> left = partition(arrays, start, mid);
+            vector<int> right = partition(arrays, mid + 1, end);
+            return merge(left, right);
+        
+    }
+
+    vector<int> merge(vector<int>& left, vector<int>& right) {
+        vector<int> result;
+        int i = 0, j = 0;
+        while (i < left.size() && j < right.size()) {
+            if (left[i] < right[j]) {
+                result.push_back(left[i]);
+                i++;
+            } else {
+                result.push_back(right[j]);
+                j++;
+            }
+        }
+        while (i < left.size()) {
+            result.push_back(left[i]);
+            i++;
+        }
+        while (j < right.size()) {
+            result.push_back(right[j]);
+            j++;
+        }
+        return result;
+    }
+    
+    vector<int> mergeKArrays(vector<vector<int>> arr, int K)
     {
-       vector<int> ans;
-       priority_queue<int,vector<int>,greater<int>>pq;
-       for(int i = 0 ;i<arr.size();++i){
-           for(int j =0 ;j<k;++j){
-               pq.push(arr[i][j]);
-           }
-       }
-       while(!pq.empty()){
-           ans.push_back(pq.top());
-           pq.pop();
-       }
-       return ans;
+        //code here
+        if (arr.empty()) return {};
+        return partition(arr, 0, arr.size() - 1);
     }
 };
+
+
 
 //{ Driver Code Starts.
 
