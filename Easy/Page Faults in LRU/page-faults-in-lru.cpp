@@ -11,60 +11,37 @@ using namespace std;
 
 class Solution{
 public:
-// Function to find the index of the least recently used page
-int LRUInd(vector<int> &setPages, vector<int> &timeStamps, int currentTime) {
-    int minIdx = -1, mini = INT_MAX;
-    for (int i = 0; i < setPages.size(); ++i) {
-        if (timeStamps[i] < mini) {
-            mini = timeStamps[i];
-            minIdx = i;
-        }
-    }
-    return minIdx;
-}
-
-int pageFaults(int N, int C, int pages[]) {
-    unordered_map<int, int> mp; // Map to store the page and its index in setPages
-    vector<int> setPages(C, -1); // Initialize setPages with -1 to indicate empty slots
-    vector<int> timeStamps(C, 0); // Vector to store the time stamps of pages
-    int pgFault = 0;
-    int currentTime = 0;
-
-    for (int i = 0; i < N; ++i) {
-        currentTime++; // Increment time for each page request
-
-        // If page is not in the setPages
-        if (mp.count(pages[i]) == 0) {
-            pgFault++;
-            // If there is space in setPages
-            bool placed = false;
-            for (int j = 0; j < C; ++j) {
-                if (setPages[j] == -1) {
-                    setPages[j] = pages[i];
-                    mp[pages[i]] = j;
-                    timeStamps[j] = currentTime;
-                    placed = true;
-                    break;
+    int pageFaults(int N, int C, int pages[]){
+        // code here
+        unordered_set<int>st; // store pages
+        unordered_map<int,int>indexes; // store pages->ind
+        int pgFaults =0;
+        for(int i =0;i<N;++i){
+            if(st.size()<C){ // less than cap
+                if(st.find(pages[i])==st.end()){ // pg not present
+                    st.insert(pages[i]);
+                    pgFaults++;
                 }
+                indexes[pages[i]]=i; // present and not present we have to update the page index
             }
-
-            // If there is no space, replace the least recently used page
-            if (!placed) {
-                int minInd = LRUInd(setPages, timeStamps, currentTime);
-                mp.erase(setPages[minInd]);
-                setPages[minInd] = pages[i];
-                mp[pages[i]] = minInd;
-                timeStamps[minInd] = currentTime;
+            else{ // size full
+                if(st.find(pages[i])==st.end()){ // not present
+                    int lru = INT_MAX,val=-1;    // find min ind at which new page can be placed
+                    for(auto it = st.begin();it!=st.end();it++){
+                        if(indexes[*it]<lru){
+                            lru = indexes[*it];  
+                            val=*it;
+                        }
+                    }
+                    st.erase(val);  // remove the prev val stored at this place 
+                    st.insert(pages[i]); //insert new one
+                    pgFaults++;
+                }
+                indexes[pages[i]]=i; // update the new page indexes
             }
-        } else {
-            // If page is already in setPages, update its time stamp
-            int idx = mp[pages[i]];
-            timeStamps[idx] = currentTime;
         }
+        return pgFaults;
     }
-
-    return pgFault;
-}
 };
 
 //{ Driver Code Starts.
