@@ -11,19 +11,20 @@ using namespace std;
 class Solution {
   public:
     // Function to find if there is a celebrity in the party or not.
+    // https://medium.com/@joylovemercy/277-find-the-celebrity-linear-comparison-o-n-step-by-step-explanation-w-graph-8928230c6e
     int celebrity(vector<vector<int> >& mat) {
         // code here
         int n = mat.size();
         
-        for(int i = 0 ;i<n;++i){
-            int row = 0,col = 0; // if(row containing 1 is  0 and col containing 1 = n-1 that all filled with 1) except i==j =0
-            for(int j =0;j<n;++j){
-                if(mat[i][j]==1)row++;
-                if(mat[j][i]==1)col++;
-            }
-            if(row==0 && col==n-1)return i;
+        int cand = 0;
+        for(int j =0;j<n;++j){
+            if(mat[cand][j])cand = j;
         }
-        return -1;
+        for(int k = 0;k<n;++k){
+            if(cand==k)continue;
+            if(mat[cand][k]==1 || mat[k][cand]==0)return -1;
+        }
+        return cand;
     }
 };
 
