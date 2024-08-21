@@ -12,16 +12,20 @@ class Solution
     int longestSubsequence(int n, int a[])
     {
        // your code here
-        vector<int> lis;
-        for(int i=0;i<n;i++){
-            int index=lower_bound(lis.begin(),lis.end(),a[i])-lis.begin();
-            if(index==lis.size())
-                lis.push_back(a[i]);
-            else
-                lis[index]=a[i];
+        vector<int> temp; // this is not genrating the lis but we get the lenghth of LIS
+        temp.push_back(a[0]);
+        int len =1;
+        for(int i=1;i<n;i++){
+            if(temp.back()<a[i]){
+                temp.push_back(a[i]);
+                len++;
+            }else{
+                int index=lower_bound(temp.begin(),temp.end(),a[i])-temp.begin();
+                temp[index]=a[i]; // replace vaule at ind which is follows the LIS but not lis
+            }
         }
      
-        return lis.size();
+        return len;
     }
 };
 
