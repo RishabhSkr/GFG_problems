@@ -118,20 +118,20 @@ struct Node
 // This function should return head to the DLL
 class Solution {
   public:
-    Node*head=NULL,*prev = NULL;
-     void solve(Node*root){
-         if(root==NULL)return ;
-    
-        solve(root->left);
-         if(head==NULL)head=root;
-        if(prev!=NULL) prev->right = root;
-        root->left = prev;
-        prev = root;
-        solve(root->right);
-     }
+ Node * head =NULL,*prev = NULL;
+    void solve(Node * root){
+        if(root==NULL)return ;
+            solve(root->left);
+            if(prev==NULL)head = root;
+            else{
+                root->left = prev;
+                prev->right = root;
+            }
+            prev = root;
+            solve(root->right);
+    }
     Node* bToDLL(Node* root) {
         // code here
-        
         solve(root);
         return head;
     }
