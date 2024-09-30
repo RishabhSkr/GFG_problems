@@ -94,23 +94,80 @@ struct Node {
 */
 class Solution {
   public:
-    // Function to return a list of integers denoting the node
-    // values of both the BST in a sorted order.
-    vector<int>ans;
-    void solve(Node * root){
-        if(root==NULL)return ;
-        ans.push_back(root->data);
-        solve(root->left);
-        solve(root->right);
+    // Function to flatten the binary tree into a linked list using the right pointers
+    Node* flatten(Node* root) {
+        if (root == NULL) return NULL;
+        Node* curr = root;
+
+        // Traverse the tree
+        while (curr != NULL) {
+            if (curr->left != NULL) {
+                // Find the predecessor in the left subtree (rightmost node of left subtree)
+                Node* pred = curr->left;
+                while (pred->right != NULL) pred = pred->right;
+
+                // Connect the predecessor's right pointer to the current node's right child
+                pred->right = curr->right;
+
+                // Move the left subtree to the right
+                curr->right = curr->left;
+                curr->left = NULL; // Set left to NULL after moving it
+            }
+            // Move to the next node (which is now in the right pointer)
+            curr = curr->right;
+        }
+        return root;
     }
-    vector<int> merge(Node *root1, Node *root2) {
-        // Your code here
-        solve(root1);
-        solve(root2);
-        sort(ans.begin(),ans.end());
-        return ans;
+
+    // Function to merge two sorted linked lists (flattened trees)
+    vector<int> merge(Node* root1, Node* root2) {
+        // Flatten both trees
+        root1 = flatten(root1);
+        root2 = flatten(root2);
+
+        // If one list is empty, return the other as a vector
+        if (root1 == NULL && root2 == NULL) return {};
+        if (root1 == NULL) root1 = root2;
+        if (root2 == NULL) root2 = root1;
+
+        // Merge two sorted linked lists
+        Node* ans;
+        if (root1->data < root2->data) {
+            ans = root1;
+            root1 = root1->right;
+        } else {
+            ans = root2;
+            root2 = root2->right;
+        }
+        Node* tail = ans;
+
+        // Merge logic
+        while (root1 != NULL && root2 != NULL) {
+            if (root1->data < root2->data) {
+                tail->right = root1;
+                root1 = root1->right;
+            } else {
+                tail->right = root2;
+                root2 = root2->right;
+            }
+            tail = tail->right;
+        }
+
+        // Append remaining nodes
+        if (root1 != NULL) tail->right = root1;
+        if (root2 != NULL) tail->right = root2;
+
+        // Collect the merged list into a vector
+        vector<int> res;
+        while (ans != NULL) {
+            res.push_back(ans->data);
+            ans = ans->right;
+        }
+        sort(begin(res),end(res));
+        return res;
     }
 };
+
 
 //{ Driver Code Starts.
 int main() {
