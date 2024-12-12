@@ -8,44 +8,12 @@ using namespace std;
 // } Driver Code Ends
 class Solution {
   public:
-    int countFreq(vector<int>& arr, int tar) {
+    int countFreq(vector<int>& arr, int target) {
         // code here
-        // O(n) Approach O(1) simple iterate and count
-        // Expected Approach-> Bin Search (logn)
-        // Algo :
-            // find just greater num > tar and lower num  less than the target using BS
-            // diff of their indexes given cnt of target
+        int l = lower_bound(arr.begin(),arr.end(),target)-arr.begin(); // just greater or equal
+        int r = upper_bound(arr.begin(),arr.end(),target)-arr.begin(); 
+        return r-l;
         
-        int n = arr.size();
-        int lo = 0 ,hi = n-1;
-        int lower = -1;
-        
-        while(lo<=hi){
-            int mid = lo + (hi-lo)/2;
-            if(arr[mid]==tar){
-                lower = mid;
-                hi = mid-1;
-            }
-            else if(arr[mid]>tar){
-                hi= mid-1;
-            }else lo = mid+1;
-        }
-        
-        if(lower==-1)return 0;
-        int high= -1;
-        
-        lo = 0,hi = n-1;
-        while(lo<=hi){
-            int mid = lo + (hi-lo)/2;
-            if(arr[mid]==tar){
-                high = mid;
-                lo = mid+1;
-            }
-            else if(arr[mid]>tar){
-                hi= mid-1;
-            }else lo = mid+1;
-        }
-        return (high-lower+1);
         
     }
 };
